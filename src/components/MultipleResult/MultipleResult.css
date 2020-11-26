@@ -1,0 +1,35 @@
+.multipleResult {
+  margin-bottom: 40px;
+}
+
+.multipleResult .title {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.multipleResult__results {
+  display: flex;
+  text-align: center;
+  gap: 12px;
+}
+.multipleResult__result {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+.multipleResult__result .totals {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(0deg, #ef435e, #ef435e 98%, transparent);
+  color: white;
+  font-weight: 700;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+.multipleResult__result:hover .totals {
+  background-image: linear-gradient(0deg, #aa2a3d, #aa2a3d 98%, transparent);
+}

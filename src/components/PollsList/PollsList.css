@@ -1,0 +1,33 @@
+.pollsList {
+  width: 170px;
+}
+
+.poll__item {
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.poll__item .title {
+  background-color: rgb(236, 151, 239);
+  height: 150px;
+  padding: 50px 15px 10px;
+}
+
+.poll__client {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
+.poll__text {
+  font-size: 12px;
+  line-height: 1.2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.poll__text > div:nth-child(even) {
+  text-align: left;
+}

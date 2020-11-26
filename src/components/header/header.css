@@ -1,0 +1,32 @@
+.header {
+  background-color: #edf4f6;
+}
+
+.header__content {
+  box-sizing: content-box;
+  display: flex;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 15px 15px;
+  align-items: center;
+}
+
+.header .plus {
+  margin: 0 auto;
+  background-color: #ef435f;
+  color: white;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 35px;
+  margin-bottom: 5px;
+}
+
+.header__add-btn {
+  font-size: 14px;
+  color: #838383;
+}
