@@ -8,12 +8,18 @@ import App from "./App";
 
 const reducer = createReducer(defaultState, {
   SET_STATE: (state, { payload }) => {
-    console.log("payload", payload);
     state.filters = payload.filters;
     state.poll_details = payload.poll_details;
     state.polls = payload.polls;
     state.user = payload.user;
     state.answers = payload.answers;
+    state.spinner = false;
+  },
+  SHOW_SPINNER: (state) => {
+    state.spinner = true;
+  },
+  HIDE_SPINNER: (state) => {
+    state.spinner = false;
   },
 });
 

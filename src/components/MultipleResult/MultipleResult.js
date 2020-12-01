@@ -9,9 +9,7 @@ class MultipleResult extends Component {
   }
 
   render() {
-    window.qqq = this.props.questions;
     const { title, results, totalAnswers } = this.props;
-    console.log(totalAnswers);
     return (
       <div className="multipleResult">
         <div className="title">{title}</div>

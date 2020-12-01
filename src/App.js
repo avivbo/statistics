@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import Spinner from "./components/Spinner/Spinner";
 
 import { data as defaultState } from "./data";
 import { connect } from "react-redux";
@@ -26,15 +27,14 @@ class App extends Component {
     fetch(`https://landing-page-media.co.il/poll/get-answers/?id=${id}`)
       .then((response) => response.json())
       .then((state) => {
-        console.log(state);
         this.props.dispatch({
           type: "SET_STATE",
           payload: state,
         });
-        console.log(state);
       });
   }
   render() {
+    const { spinner } = this.props;
     return (
       <div className="App">
         <Header />
@@ -44,6 +44,7 @@ class App extends Component {
           <StatusBox />
           <PollsList />
         </div>
+        {spinner && <Spinner />}
       </div>
     );
   }
@@ -51,6 +52,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
   title: state.poll_details.title,
+  spinner: state.spinner,
 });
 
 export default connect(mapStateToProps)(App);

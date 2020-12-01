@@ -14,6 +14,7 @@ import {
 import { pdf } from "@react-pdf/renderer";
 import ReactPDF from "@react-pdf/renderer";
 import { summaryAnswers, getQuestionByParameter } from "../../utils";
+import ExportToExcel from "../ExportToExcel/ExportToExcel";
 
 Font.register({
   family: "Roboto",
@@ -49,7 +50,6 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
   },
   header: {
-    textAlign: "right",
     fontSize: 12,
     marginBottom: 20,
     textAlign: "center",
@@ -97,57 +97,87 @@ class StatusBox extends Component {
   }
 
   handlePDF(e) {
+    const { id } = this.props;
+
     e.preventDefault();
 
-    const saveBlob = (blob, filename) => {
-      var a = document.createElement("a");
-      document.body.appendChild(a);
-      a.style.display = "none";
-      let url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = filename;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    };
+    this.props.dispatch({
+      type: "SHOW_SPINNER",
+    });
+    fetch(`https://landing-page-media.co.il/poll/test/?id=${id}`, {
+      method: "GET",
+    })
+      .then((response) => response.blob())
+      .then((blob) => {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "results.pdf";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove(); //afterwards we remove the element again
+      })
+      .then(() => {
+        this.props.dispatch({
+          type: "HIDE_SPINNER",
+        });
+      });
+  }
 
-    const savePdf = async (document, filename) => {
-      saveBlob(await pdf(document).toBlob(), filename);
-    };
+  handleExcel(e) {
+    e.preventDefault();
 
-    const { questions, answers } = this.props;
-    const results = summaryAnswers(questions, answers, undefined);
-    const resultsParams = Object.keys(results);
+    const title = document.querySelector("h1").textContent;
+    const rows = [];
 
-    // Create Document Component
-    const MyDocument = () => (
-      <Document>
-        <Page style={styles.body}>
-          <Text style={styles.header} fixed>
-            תשובות לשאלון: {this.props.title}
-          </Text>
-          {resultsParams.map((parameter, index) => {
-            const question = getQuestionByParameter(questions, parameter);
-            const title = question.title;
+    document.querySelectorAll(".results > *").forEach((answer) => {
+      if (answer.classList.contains("singleResult")) {
+        const title = answer
+          .querySelector(".title")
+          .textContent.replace(",", "");
+        rows.push([title, ""]);
 
-            switch (question.type) {
-              case "single":
-                return (
-                  <Text style={styles.text} fixed>
-                    {title.replace(/[^א-ת 0-9 ()]/g, "")}
-                  </Text>
-                );
-              case "multiple":
-                return;
-              default:
-                break;
-            }
-            return;
-          })}
-        </Page>
-      </Document>
+        answer.querySelectorAll(".display-content").forEach((answer) => {
+          const answerText = answer.querySelector(".display-content__answer")
+            .textContent;
+          const answerValue = answer.querySelector(".totals").textContent;
+          rows.push([answerText, answerValue]);
+        });
+        rows.push([" ", " "]);
+      }
+    });
+
+    let csvContent = "data:te,\n";
+
+    rows.forEach(function (rowArray) {
+      let row = rowArray.join(",");
+      csvContent += row + "\r\n";
+    });
+
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "my_data.csv");
+    document.body.appendChild(link); // Required for FF
+
+    link.click(); // This will download the data file named "my_data.csv".
+
+    var csvString = "ı,ü,ü,ğ,ş,#Hashtag,ä,ö";
+    var universalBOM = "\uFEFF";
+    var a = window.document.createElement("a");
+    a.setAttribute(
+      "href",
+      "data:text/csv; charset=utf-8," +
+        encodeURIComponent(universalBOM + csvContent)
     );
-    savePdf(<MyDocument />, "my-document.pdf");
-    // ReactPDF.render(<MyDocument />, "example.pdf");
+
+    console.log(
+      "data:text/csv; charset=utf-8," +
+        encodeURIComponent(universalBOM + csvContent)
+    );
+    a.setAttribute("download", "example.csv");
+    window.document.body.appendChild(a);
+    a.click();
   }
   render() {
     return (
@@ -166,6 +196,18 @@ class StatusBox extends Component {
             target="_blank"
             href="/"
             onClick={this.handlePDF}
+          >
+            <img
+              className="pdf-btn"
+              src="https://landing-page-media.co.il/poll/wp-content/themes/polls/assets/pdf.png"
+              alt="ייצא לקובץ PDF"
+            />
+          </a>
+          <a
+            className="pdf-btn"
+            target="_blank"
+            href="/"
+            onClick={this.handleExcel}
           >
             <img
               className="pdf-btn"

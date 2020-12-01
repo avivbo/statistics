@@ -19,7 +19,7 @@ class SingleResult extends Component {
             const percentages = Math.round((totals / totalAnswers) * 100) || 0;
             return (
               <div className="display-content" key={index}>
-                <div>{answer}</div>
+                <div className="display-content__answer">{answer}</div>
                 <progress
                   id="file"
                   value={totals}

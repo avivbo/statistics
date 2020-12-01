@@ -9,8 +9,6 @@ export function summaryAnswers(questions, answers = [], filters) {
     preparedQuestions[question.parameter] = optionsObject;
   });
 
-  console.log(answers);
-  console.log(questions);
   answers.forEach((answer) => {
     const keys = Object.keys(answer);
     keys.forEach((key) => {
@@ -23,8 +21,6 @@ export function summaryAnswers(questions, answers = [], filters) {
           });
         } else {
           if (answer[key] != "") {
-            console.log(preparedQuestions);
-            console.log(key);
             if (Number.isInteger(preparedQuestions[key][answer[key]])) {
               preparedQuestions[key][answer[key]] += 1;
             }
